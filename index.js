@@ -17,14 +17,14 @@ client.on('ready', () => {
 client.once(Events.ClientReady, async c => {
 	console.log(`Logged in as ${c.user.tag}`);
 
+
 	const aram = new SlashCommandBuilder()
 		.setName('aram')
 		.setDescription('Get ARAM stats for a champion')
 		.addStringOption(option =>
 			option.setName('champion')
 				.setDescription('The name of the champion')
-				.setRequired(true)
-				.setAutocomplete(true));
+				.setRequired(true));
 
 	const aramCommand = aram.toJSON();
 
