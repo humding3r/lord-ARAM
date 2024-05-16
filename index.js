@@ -5,7 +5,6 @@ const cheerio = require('cheerio');
 
 const client = new Client({ 
 	intents: [
-		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.MessageContent,
 	]
@@ -15,7 +14,7 @@ client.on('ready', () => {
 	console.log('LordARAM is online!');
 });
 
-client.once(Events.ClientReady, c => {
+client.once(Events.ClientReady, async c => {
 	console.log(`Logged in as ${c.user.tag}`);
 
 	const aram = new SlashCommandBuilder()
@@ -29,12 +28,11 @@ client.once(Events.ClientReady, c => {
 
 	const aramCommand = aram.toJSON();
 
-	client.application.commands.create(pingCommand);
 	client.application.commands.create(aramCommand);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isChatInputCommand() || !interaction.isAutocomplete())
+	if (!interaction.isChatInputCommand())
 		return;
 
 	if (interaction.commandName === "aram") {
