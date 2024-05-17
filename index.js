@@ -39,7 +39,7 @@ client.on(Events.InteractionCreate, async interaction => {
 		const champion = interaction.options.getString("champion");
 
 		try {
-			const aramData = await getAramStats(champion);
+			const aramData = await getAramStats(champion.charAt(0).toUpperCase() + champion.substring(1).toLowerCase());
 			await interaction.reply({ embeds: [aramData] });
 		} catch (error) {
 			console.error(error);
