@@ -40,7 +40,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 		try {
 			const aramData = await getAramStats(champion);
-			await interaction.reply(aramData);
+			await interaction.reply({ embeds: [aramData] });
 		} catch (error) {
 			console.error(error);
 			await interaction.reply("Error fetching ARAM data.");
@@ -55,14 +55,29 @@ async function getAramStats(champion) {
 		const { data } = await axios.get(url);
 		const $ = cheerio.load(data);
 
-		const winRate = $('div.win-rate > div.value').text()
-		const pickRate = $('div.pick-rate > div.value').text()
+		const winRate = $('div.win-rate > div.value').text();
+		const pickRate = $('div.pick-rate > div.value').text();
+		const tier = $('div.tier').text();
+		const portrait = $('img.champion-image').attr('src');
 
-		console.log(`Champion requested: ${champion}`);
-		console.log(`Win Rate: ${winRate}`);
-		console.log(`Pick Rate: ${pickRate}`);
+		const aramStats = new EmbedBuilder()
+			.setColor(0x3273FA)
+			.setTitle(`${champion} ARAM Statistics`)
+			.setURL(url)
+			.setAuthor({
+				name: 'LordARAM',
+				iconURL: 'https://ia800305.us.archive.org/31/items/discordprofilepictures/discordgreen.png',
+				url: 'https://github.com/humding3r/lord-ARAM',
+			})
+			.setDescription(`\*\*Highest Win Rate\*\* info for \*\*${champion}\*\*`)
+			.setThumbnail(portrait)
+			.addFields(
+				{ name: '\*\*Win Rate\*\*', value: winRate, inline: true },
+				{ name: '\*\*Pick Rate\*\*', value: pickRate, inline: true },
+				{ name: '\*\*Tier\*\*', value: tier, inline: true },
+			);
 
-		return `ARAM Stats for ${champion}:\nWin Rate: ${winRate}\nPick Rate: ${pickRate}`
+		return aramStats;
 	} catch (error) {
 		console.error(error);
 		throw new Error("Failed to fetch ARAM stats");
