@@ -1,4 +1,4 @@
-const { token } = require("./config.json");
+const { token } = require("../config.json");
 const { Client, Events, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const axios = require('axios');
 const cheerio = require('cheerio');
