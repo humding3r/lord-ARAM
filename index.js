@@ -65,9 +65,9 @@ async function getAramStats(champion) {
 		for (let i = 0; i < 4; ++i) {
 			$('div.skill-order').eq(i).children().each(function (j, elem) {
 				if ($(this).hasClass('skill-up'))
-					skillOrder[i] += ' ■';
+					skillOrder[i] += '🔲';
 				else if ($(this).hasClass('no-skill-up'))
-					skillOrder[i] += ' □';
+					skillOrder[i] += '⬛';
 			});
 		}
 
@@ -89,10 +89,10 @@ async function getAramStats(champion) {
 				{ name: '\*\*Pick Rate\*\*', value: pickRate, inline: true },
 				{ name: '\*\*Tier\*\*', value: tier, inline: true },
 				{ name: '\*\*Skill Order\*\*', 
-					value: `\n🇶${skillOrder[0]}
-						\n🇼${skillOrder[1]}
-						\n🇪${skillOrder[2]}
-						\n🇷${skillOrder[3]}` },
+					value: `\n🇶\t${skillOrder[0]}
+						\n🇼\t${skillOrder[1]}
+						\n🇪\t${skillOrder[2]}
+						\n🇷\t${skillOrder[3]}` },
 			);
 
 		return aramStats;
