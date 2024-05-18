@@ -60,6 +60,19 @@ async function getAramStats(champion) {
 		const tier = $('div.tier').text();
 		const portrait = $('img.champion-image').attr('src');
 
+		let skillOrder = [ '', '', '', '' ];
+
+		for (let i = 0; i < 4; ++i) {
+			$('div.skill-order').eq(i).children().each(function (j, elem) {
+				if ($(this).hasClass('skill-up'))
+					skillOrder[i] += ' ■';
+				else if ($(this).hasClass('no-skill-up'))
+					skillOrder[i] += ' □';
+			});
+		}
+
+		console.log(skillOrder);
+
 		const aramStats = new EmbedBuilder()
 			.setColor(0x3273FA)
 			.setTitle(`${champion} ARAM Statistics`)
@@ -75,6 +88,11 @@ async function getAramStats(champion) {
 				{ name: '\*\*Win Rate\*\*', value: winRate, inline: true },
 				{ name: '\*\*Pick Rate\*\*', value: pickRate, inline: true },
 				{ name: '\*\*Tier\*\*', value: tier, inline: true },
+				{ name: '\*\*Skill Order\*\*', 
+					value: `\n🇶${skillOrder[0]}
+						\n🇼${skillOrder[1]}
+						\n🇪${skillOrder[2]}
+						\n🇷${skillOrder[3]}` },
 			);
 
 		return aramStats;
