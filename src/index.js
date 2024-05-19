@@ -65,9 +65,9 @@ async function getAramStats(champion) {
 		const matches = $('div.matches > div.value').text();
 		const portrait = $('img.champion-image').attr('src');
 
-		const spellOne = $('div.summoner-spells > div.flex > img').eq(0).attr('alt').replace('Summoner Spell', '').trim().toLowerCase();
+		const spellOne = $('div.summoner-spells > div.flex > img').eq(1).attr('alt').replace('Summoner Spell', '').trim().toLowerCase();
 		const spellOneIcon = client.emojis.cache.get(spells[spellOne]);
-		const spellTwo = $('div.summoner-spells > div.flex > img').eq(1).attr('alt').replace('Summoner Spell', '').trim().toLowerCase();
+		const spellTwo = $('div.summoner-spells > div.flex > img').eq(0).attr('alt').replace('Summoner Spell', '').trim().toLowerCase();
 		const spellTwoIcon = client.emojis.cache.get(spells[spellTwo]);
 
 		const keystone = $('div.keystone.perk-active > img').attr('alt').replace('The Keystone', '').replace(':', '').trim().replaceAll(' ', '_').toLowerCase();
