@@ -76,7 +76,7 @@ async function getAramStats(champion) {
 		const keystone = $('div.keystone.perk-active > img').attr('alt').replace('The Keystone', '').replace(':', '').trim().replaceAll(' ', '_').toLowerCase();
 		const keystoneIcon = client.emojis.cache.get(runes[keystone]);
 
-		const secondary = $('div.perk-style-title').eq(1).text().trim().replace(' ', '_').toLowerCase();
+		const secondary = $('div.perk-style-title').eq(1).text().trim().replaceAll(' ', '_').toLowerCase();
 		const secondaryIcon = client.emojis.cache.get(runes[secondary]);
 
 		const rune1 = $('div.perk-active > img').eq(1).attr('alt').replace('The Rune', '').replace(':', '').trim().replaceAll(' ', '_').toLowerCase();
