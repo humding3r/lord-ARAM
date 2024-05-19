@@ -53,12 +53,13 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 async function getAramStats(champion) {
-	const url = `https://u.gg/lol/champions/aram/${champion.toLowerCase()}-aram`;
+	const url = `https://u.gg/lol/champions/aram/${champion.replaceAll(' ', '').split('&')[0].toLowerCase()}-aram`;
 
 	try {
 		const { data } = await axios.get(url);
 		const $ = cheerio.load(data);
 
+		const championName = $('span.champion-name').text();
 		const winRate = $('div.win-rate > div.value').text();
 		const pickRate = $('div.pick-rate > div.value').text();
 		const tier = $('div.tier').text();
@@ -103,14 +104,14 @@ async function getAramStats(champion) {
 
 		const aramStats = new EmbedBuilder()
 			.setColor(0x3273FA)
-			.setTitle(`${champion} ARAM Statistics`)
+			.setTitle(`${championName} ARAM Statistics`)
 			.setURL(url)
 			.setAuthor({
 				name: 'LordARAM',
 				iconURL: 'https://ia800305.us.archive.org/31/items/discordprofilepictures/discordgreen.png',
 				url: 'https://github.com/humding3r/lord-ARAM',
 			})
-			.setDescription(`\*\*Highest Win Rate\*\* info for \*\*${champion}\*\*`)
+			.setDescription(`\*\*Highest Win Rate\*\* info for \*\*${championName}\*\*`)
 			.setThumbnail(portrait)
 			.addFields(
 				{ name: '\*\*Win Rate\*\*', value: winRate, inline: true },
