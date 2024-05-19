@@ -4,6 +4,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 const spells = require('../data/spells.json');
+const runes = require('../data/runes.json');
 
 const client = new Client({ 
 	intents: [
@@ -16,7 +17,6 @@ const client = new Client({
 
 client.on('ready', () => {
 	console.log('LordARAM is online!');
-	console.log(spells);
 });
 
 client.once(Events.ClientReady, async c => {
@@ -62,11 +62,33 @@ async function getAramStats(champion) {
 		const winRate = $('div.win-rate > div.value').text();
 		const pickRate = $('div.pick-rate > div.value').text();
 		const tier = $('div.tier').text();
+		const matches = $('div.matches > div.value').text();
 		const portrait = $('img.champion-image').attr('src');
-		const spellOne = $('div.summoner-spells > div.flex > img').eq(0).attr('alt').replace('Summoner Spell', '').trim();
+
+		const spellOne = $('div.summoner-spells > div.flex > img').eq(0).attr('alt').replace('Summoner Spell', '').trim().toLowerCase();
 		const spellOneIcon = client.emojis.cache.get(spells[spellOne]);
-		const spellTwo = $('div.summoner-spells > div.flex > img').eq(1).attr('alt').replace('Summoner Spell', '').trim();
+		const spellTwo = $('div.summoner-spells > div.flex > img').eq(1).attr('alt').replace('Summoner Spell', '').trim().toLowerCase();
 		const spellTwoIcon = client.emojis.cache.get(spells[spellTwo]);
+
+		const keystone = $('div.keystone.perk-active > img').attr('alt').replace('The Keystone', '').replace(':', '').trim().replaceAll(' ', '_').toLowerCase();
+		const keystoneIcon = client.emojis.cache.get(runes[keystone]);
+
+		const secondary = $('div.perk-style-title').eq(1).text().trim().replace(' ', '_').toLowerCase();
+		const secondaryIcon = client.emojis.cache.get(runes[secondary]);
+
+		const rune1 = $('div.perk-active > img').eq(1).attr('alt').replace('The Rune', '').replace(':', '').trim().replaceAll(' ', '_').toLowerCase();
+		const rune2 = $('div.perk-active > img').eq(2).attr('alt').replace('The Rune', '').replace(':', '').trim().replaceAll(' ', '_').toLowerCase();
+		const rune3 = $('div.perk-active > img').eq(3).attr('alt').replace('The Rune', '').replace(':', '').trim().replaceAll(' ', '_').toLowerCase();
+		const rune4 = $('div.perk-active > img').eq(4).attr('alt').replace('The Rune', '').replace(':', '').trim().replaceAll(' ', '_').toLowerCase();
+		const rune5 = $('div.perk-active > img').eq(5).attr('alt').replace('The Rune', '').replace(':', '').trim().replaceAll(' ', '_').toLowerCase();
+
+		const runeIcons = [
+			client.emojis.cache.get(runes[rune1]),
+			client.emojis.cache.get(runes[rune2]),
+			client.emojis.cache.get(runes[rune3]),
+			client.emojis.cache.get(runes[rune4]),
+			client.emojis.cache.get(runes[rune5]),
+		];
 
 		let skillOrder = [ '', '', '', '' ];
 
@@ -78,8 +100,6 @@ async function getAramStats(champion) {
 					skillOrder[i] += '⬛';
 			});
 		}
-
-		console.log(skillOrder);
 
 		const aramStats = new EmbedBuilder()
 			.setColor(0x3273FA)
@@ -102,8 +122,13 @@ async function getAramStats(champion) {
 						🇪\t${skillOrder[2]}
 						🇷\t${skillOrder[3]}` },
 				{ name: '\*\*Spells\*\*',
-					value: `${spellOneIcon}\t\*${spellOne}\*
-						${spellTwoIcon}\t\*${spellTwo}\*` },
+					value: `${spellOneIcon}\t\*${spellOne.charAt(0).toUpperCase() + spellOne.slice(1)}\*
+						${spellTwoIcon}\t\*${spellTwo.charAt(0).toUpperCase() + spellTwo.slice(1)}\*`,
+					inline: true },
+				{ name: '\*\*Runes\*\*',
+					value: `${keystoneIcon} ${runeIcons[0]} ${runeIcons[1]} ${runeIcons[2]}
+						${secondaryIcon} ${runeIcons[3]} ${runeIcons[4]}`,
+					inline: true },
 			);
 
 		return aramStats;
