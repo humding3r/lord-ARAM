@@ -5,6 +5,7 @@ const cheerio = require('cheerio');
 
 const spells = require('../data/spells.json');
 const runes = require('../data/runes.json');
+const ranks = require('../data/ranks.json');
 
 const client = new Client({ 
 	intents: [
@@ -63,6 +64,7 @@ async function getAramStats(champion) {
 		const winRate = $('div.win-rate > div.value').text();
 		const pickRate = $('div.pick-rate > div.value').text();
 		const tier = $('div.tier').text();
+		const rank = client.emojis.cache.get(ranks[tier]);
 		const matches = $('div.matches > div.value').text();
 		const portrait = $('img.champion-image').attr('src');
 
@@ -116,7 +118,7 @@ async function getAramStats(champion) {
 			.addFields(
 				{ name: '\*\*Win Rate\*\*', value: winRate, inline: true },
 				{ name: '\*\*Pick Rate\*\*', value: pickRate, inline: true },
-				{ name: '\*\*Tier\*\*', value: tier, inline: true },
+				{ name: '\*\*Tier\*\*', value: `${rank}`, inline: true },
 				{ name: '\*\*Skill Order\*\*', 
 					value: `🇶\t${skillOrder[0]}
 						🇼\t${skillOrder[1]}
