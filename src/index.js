@@ -3,20 +3,24 @@ const { Client, Events, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder } =
 const axios = require('axios');
 const cheerio = require('cheerio');
 
+const spells = require('../data/spells.json');
+
 const client = new Client({ 
 	intents: [
+		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildEmojisAndStickers,
 	]
 });
 
 client.on('ready', () => {
 	console.log('LordARAM is online!');
+	console.log(spells);
 });
 
 client.once(Events.ClientReady, async c => {
 	console.log(`Logged in as ${c.user.tag}`);
-
 
 	const aram = new SlashCommandBuilder()
 		.setName('aram')
@@ -59,6 +63,10 @@ async function getAramStats(champion) {
 		const pickRate = $('div.pick-rate > div.value').text();
 		const tier = $('div.tier').text();
 		const portrait = $('img.champion-image').attr('src');
+		const spellOne = $('div.summoner-spells > div.flex > img').eq(0).attr('alt').replace('Summoner Spell', '').trim();
+		const spellOneIcon = client.emojis.cache.get(spells[spellOne]);
+		const spellTwo = $('div.summoner-spells > div.flex > img').eq(1).attr('alt').replace('Summoner Spell', '').trim();
+		const spellTwoIcon = client.emojis.cache.get(spells[spellTwo]);
 
 		let skillOrder = [ '', '', '', '' ];
 
@@ -89,10 +97,13 @@ async function getAramStats(champion) {
 				{ name: '\*\*Pick Rate\*\*', value: pickRate, inline: true },
 				{ name: '\*\*Tier\*\*', value: tier, inline: true },
 				{ name: '\*\*Skill Order\*\*', 
-					value: `\n🇶\t${skillOrder[0]}
-						\n🇼\t${skillOrder[1]}
-						\n🇪\t${skillOrder[2]}
-						\n🇷\t${skillOrder[3]}` },
+					value: `🇶\t${skillOrder[0]}
+						🇼\t${skillOrder[1]}
+						🇪\t${skillOrder[2]}
+						🇷\t${skillOrder[3]}` },
+				{ name: '\*\*Spells\*\*',
+					value: `${spellOneIcon}\t\*${spellOne}\*
+						${spellTwoIcon}\t\*${spellTwo}\*` },
 			);
 
 		return aramStats;
