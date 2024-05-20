@@ -6,6 +6,7 @@ const cheerio = require('cheerio');
 const spells = require('../data/spells.json');
 const runes = require('../data/runes.json');
 const ranks = require('../data/ranks.json');
+const builds = require('../data/builds.json');
 
 const client = new Client({ 
 	intents: [
@@ -44,7 +45,7 @@ client.on(Events.InteractionCreate, async interaction => {
 		const champion = interaction.options.getString("champion");
 
 		try {
-			const aramData = await getAramStats(champion.charAt(0).toUpperCase() + champion.substring(1).toLowerCase());
+			const aramData = await getAramStats(champion.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()));
 			await interaction.reply({ embeds: [aramData] });
 		} catch (error) {
 			console.error(error);
@@ -54,11 +55,17 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 async function getAramStats(champion) {
-	const url = `https://u.gg/lol/champions/aram/${champion.replaceAll(' ', '').split('&')[0].toLowerCase()}-aram`;
+	const name = champion.replaceAll(' ', '').split('&')[0].toLowerCase();
+	const url = `https://u.gg/lol/champions/aram/${name}-aram`;
+	const buildName = builds.hasOwnProperty(name) ? builds[name] : name;
+	const build = `https://www.aram.build/${buildName}/`;
 
 	try {
 		const { data } = await axios.get(url);
 		const $ = cheerio.load(data);
+		const buildSite = await axios.get(build);
+		const buildData = await buildSite.data;
+		const B = cheerio.load(buildData);
 
 		const championName = $('span.champion-name').text();
 		const winRate = $('div.win-rate > div.value').text();
@@ -92,6 +99,24 @@ async function getAramStats(champion) {
 			client.emojis.cache.get(runes[rune4]),
 			client.emojis.cache.get(runes[rune5]),
 		];
+
+		let starters = '';
+
+		B('div.w-full:nth-child(5) > div:nth-child(2)').children().each(function (i, elem) {
+			starters += `\* ${B(this).children().attr('alt')}\n`;
+		});
+
+		let core = '';
+
+		B('div.w-full:nth-child(6) > div:nth-child(2)').children('img').each(function (i, elem) {
+			core += `\> ${B(this).attr('alt')}\n`;
+		});
+
+		let late = '';
+
+		B('div.w-full:nth-child(7) > div:nth-child(2)').children().each(function (i, elem) {
+			late += `\> ${B(this).children().attr('alt')}\n`;
+		});
 
 		let skillOrder = [ '', '', '', '' ];
 
@@ -132,6 +157,9 @@ async function getAramStats(champion) {
 					value: `${keystoneIcon} ${runeIcons[0]} ${runeIcons[1]} ${runeIcons[2]}
 						${secondaryIcon} ${runeIcons[3]} ${runeIcons[4]}`,
 					inline: true },
+				{ name: '\*\*Starter Items\*\*', value: starters, inline: true },
+				{ name: '\*\*Core Items\*\*', value: core, inline: true },
+				{ name: '\*\*Late Game Items\*\*', value: late, inline: true },
 			);
 
 		return aramStats;
