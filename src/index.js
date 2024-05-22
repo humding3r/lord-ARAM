@@ -72,7 +72,6 @@ async function getAramStats(champion) {
     const pickRate = $('div.pick-rate > div.value').text();
     const tier = $('div.tier').text();
     const rank = client.emojis.cache.get(ranks[tier]);
-    const matches = $('div.matches > div.value').text();
     const portrait = $('img.champion-image').attr('src');
 
     const spellOne = $('div.summoner-spells > div.flex > img').eq(1).attr('alt').replace('Summoner Spell', '').trim().toLowerCase();
@@ -102,26 +101,26 @@ async function getAramStats(champion) {
 
     let starters = '';
 
-    B('div.w-full:nth-child(5) > div:nth-child(2)').children().each(function(i, elem) {
+    B('div.w-full:nth-child(5) > div:nth-child(2)').children().each(function() {
       starters += `\* ${B(this).children().attr('alt')}\n`;
     });
 
     let core = '';
 
-    B('div.w-full:nth-child(6) > div:nth-child(2)').children('img').each(function(i, elem) {
+    B('div.w-full:nth-child(6) > div:nth-child(2)').children('img').each(function() {
       core += `\> ${B(this).attr('alt')}\n`;
     });
 
     let late = '';
 
-    B('div.w-full:nth-child(7) > div:nth-child(2)').children().each(function(i, elem) {
+    B('div.w-full:nth-child(7) > div:nth-child(2)').children().each(function() {
       late += `\> ${B(this).children().attr('alt')}\n`;
     });
 
     let skillOrder = ['', '', '', ''];
 
     for (let i = 0; i < 4; ++i) {
-      $('div.skill-order').eq(i).children().each(function(j, elem) {
+      $('div.skill-order').eq(i).children().each(function() {
         if ($(this).hasClass('skill-up'))
           skillOrder[i] += '🔲';
         else if ($(this).hasClass('no-skill-up'))
