@@ -1,60 +1,13 @@
-const { token } = require("../config.json");
-const { Client, Events, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const axios = require('axios');
 const cheerio = require('cheerio');
+const { EmbedBuilder } = require('discord.js');
 
-const spells = require('../data/spells.json');
-const runes = require('../data/runes.json');
-const ranks = require('../data/ranks.json');
 const alts = require('../data/alts.json');
+const ranks = require('../data/ranks.json');
+const runes = require('../data/runes.json');
+const spells = require('../data/spells.json');
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildEmojisAndStickers,
-  ]
-});
-
-client.on('ready', () => {
-  console.log('LordARAM is online!');
-});
-
-client.once(Events.ClientReady, async c => {
-  console.log(`Logged in as ${c.user.tag}`);
-
-  const aram = new SlashCommandBuilder()
-    .setName('aram')
-    .setDescription('Get ARAM stats for a champion')
-    .addStringOption(option =>
-      option.setName('champion')
-        .setDescription('The name of the champion')
-        .setRequired(true));
-
-  const aramCommand = aram.toJSON();
-
-  client.application.commands.create(aramCommand);
-});
-
-client.on(Events.InteractionCreate, async interaction => {
-  if (!interaction.isChatInputCommand())
-    return;
-
-  if (interaction.commandName === "aram") {
-    const champName = interaction.options.getString("champion");
-
-    try {
-      const aramData = await getAramStats(champName.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()));
-      await interaction.reply({ embeds: [aramData] });
-    } catch (error) {
-      console.error(error);
-      await interaction.reply("Error fetching ARAM data.");
-    }
-  }
-});
-
-async function getAramStats(champName) {
+async function getAramStats(champName, client) {
   const name = champName.replaceAll(' ', '').split('&')[0].toLowerCase();
   const url = `https://u.gg/lol/champions/aram/${name}-aram`;
   const buildName = alts.hasOwnProperty(name) ? alts[name] : name;
@@ -180,4 +133,4 @@ async function getAramStats(champName) {
   }
 }
 
-client.login(token);
+module.exports = { getAramStats };
