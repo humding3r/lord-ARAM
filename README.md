@@ -16,7 +16,7 @@ LordARAM is a Discord bot that retrieves the latest meta builds for League of Le
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/lord-aram.git
+    git clone https://github.com/humding3r/lord-aram.git
     cd lord-aram
     ```
 
