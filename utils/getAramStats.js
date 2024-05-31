@@ -93,7 +93,7 @@ async function getAramStats(champName, client) {
       .setURL(url)
       .setAuthor({
         name: 'LordARAM',
-        iconURL: 'https://ia800305.us.archive.org/31/items/discordprofilepictures/discordgreen.png',
+        iconURL: 'https://i.imgur.com/k2RwZqt.png',
         url: 'https://github.com/humding3r/lord-ARAM',
       })
       .setDescription(`\*\*Highest Win Rate\*\* info for \*\*${champ.name}\*\*`)
@@ -124,7 +124,10 @@ async function getAramStats(champName, client) {
         { name: '\*\*Starter Items\*\*', value: starters, inline: true },
         { name: '\*\*Core Items\*\*', value: core, inline: true },
         { name: '\*\*Late Game Items\*\*', value: late, inline: true },
-      );
+        { name: '\u200B', value: '\u200B' },
+      )
+      .setTimestamp()
+      .setFooter({ text: 'Stats from u.gg and aram.build' });
 
     return aramStats;
   } catch (error) {
