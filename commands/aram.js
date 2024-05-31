@@ -13,8 +13,9 @@ module.exports = {
     const champName = interaction.options.getString("champion");
 
     try {
+      await interaction.deferReply({ ephemeral: true });
       const aramData = await getAramStats(champName.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()), client);
-      await interaction.reply({ embeds: [aramData] });
+      await interaction.editReply({ embeds: [aramData] });
     } catch (error) {
       console.error(error);
       await interaction.reply("Error fetching ARAM data.");
