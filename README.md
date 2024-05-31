@@ -27,9 +27,7 @@ LordARAM is a Discord bot that retrieves the latest meta builds for League of Le
 
 3. Create a `config.json` file in the root directory and add your Discord bot token:
     ```json
-    {
-      "token": "your-bot-token-here"
-    }
+    { "token": "your-bot-token-here" }
     ```
 
 4. Start the bot:
