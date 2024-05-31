@@ -132,7 +132,7 @@ async function getAramStats(champName, client) {
     return aramStats;
   } catch (error) {
     console.error(error);
-    throw new Error("Failed to fetch ARAM stats");
+    return new EmbedBuilder().addFields({ name: 'Error', value: 'Champion not found!' });
   }
 }
 
