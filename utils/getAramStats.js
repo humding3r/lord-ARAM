@@ -8,7 +8,7 @@ const runes = require('../data/runes.json');
 const spells = require('../data/spells.json');
 
 async function getAramStats(champName, client) {
-  const name = champName.replaceAll(' ', '').split('&')[0].toLowerCase();
+  const name = champName.replaceAll(' ', '').replaceAll('.', '').split('&')[0].toLowerCase();
   const url = `https://u.gg/lol/champions/aram/${name}-aram`;
   const buildName = alts.hasOwnProperty(name) ? alts[name] : name;
   const build = `https://www.aram.build/${buildName}/`;
